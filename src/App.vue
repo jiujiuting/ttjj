@@ -1,5 +1,5 @@
 <template>
-  <div>123</div>
+  <div>12345</div>
 </template>
 
 <script>
@@ -12,10 +12,11 @@ export default {
   computed: {},
   watch: {},
   filters: {},
-  components: {}
+  components: {
+
+  }
 }
 </script>
 
 <style scoped lang='less'>
-
 </style>
