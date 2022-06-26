@@ -7,6 +7,8 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 // 移动端适配
 import 'amfe-flexible'
+// 字体图标
+import '@/styles/icon.less'
 
 Vue.config.productionTip = false
 

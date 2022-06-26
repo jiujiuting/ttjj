@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <router-view></router-view>
-  </div>
+  <div>登录</div>
 </template>
 
 <script>
@@ -14,11 +12,9 @@ export default {
   computed: {},
   watch: {},
   filters: {},
-  components: {
-
-  }
+  components: {}
 }
 </script>
 
-<style scoped lang='less'>
+<style scoped>
 </style>
