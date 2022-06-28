@@ -62,7 +62,7 @@ export default {
     return {
       mobile: '15888888888', // 手机号
       code: '246810', // 短信验证码
-      time: 5 * 1000, // 单位毫秒
+      time: 60 * 1000, // 单位毫秒
       isCountDownShow: false // 默认不显示倒计时
     }
   },
