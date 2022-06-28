@@ -8,8 +8,11 @@ import Vant from 'vant'
 import 'vant/lib/index.less'
 // 移动端适配
 import 'amfe-flexible'
-// 字体图标
-import '@/styles/icon.less'
+// 初始化--清除默认样式--字体图标
+import '@/styles/index.less'
+
+import MyIcon from '@/components/MyIcon.vue'
+Vue.component('MyIcon', MyIcon)
 
 Vue.config.productionTip = false
 
