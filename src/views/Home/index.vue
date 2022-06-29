@@ -1,6 +1,6 @@
 <template>
   <div>
-    <van-nav-bar title="标题">
+    <van-nav-bar title="标题" fixed>
       <template #title>
         <van-button type="info" icon="search" class="search-btn"
           >搜索</van-button
@@ -8,20 +8,31 @@
       </template>
     </van-nav-bar>
     <van-tabs v-model="active" animated>
-      <van-tab :title="item.name" v-for="item in channels" :key="item.id"
-        >内容--{{ item.name }}</van-tab
-      >
+      <van-tab :title="item.name" v-for="item in channels" :key="item.id">
+        <ArticleList :id="item.id"></ArticleList>
+      </van-tab>
       <template #nav-right>
-        <div class="menu">
+        <div class="menu" @click="isChannelPanelShow = true">
           <i class="toutiao toutiao-gengduo"></i>
         </div>
         <div class="menu1"></div>
       </template>
     </van-tabs>
+    <van-popup
+      v-model="isChannelPanelShow"
+      position="bottom"
+      :style="{ height: '100%', paddingTop: '1rem' }"
+      closeable
+      close-icon-position="top-left"
+    >
+      <ChannelPanel :channels="channels"></ChannelPanel>
+    </van-popup>
   </div>
 </template>
 
 <script>
+import ChannelPanel from './components/ChannelPanel.vue'
+import ArticleList from '@/components/ArticleList.vue'
 import { getMyChannels } from '@/api/home'
 export default {
   name: 'Home',
@@ -31,14 +42,14 @@ export default {
   data () {
     return {
       active: 0,
-      channels: []
+      channels: [],
+      isChannelPanelShow: false
     }
   },
   methods: {
     async getMyChannels () {
       try {
         const res = await getMyChannels()
-        console.log('res', res)
         this.channels = res.data.data.channels
       } catch (err) {
         console.log(err)
@@ -48,7 +59,10 @@ export default {
   computed: {},
   watch: {},
   filters: {},
-  components: {}
+  components: {
+    ArticleList,
+    ChannelPanel
+  }
 }
 </script>
 
@@ -90,5 +104,12 @@ export default {
   min-width: 85px;
   height: 82px;
   background-color: rgba(255, 255, 255, 0.9);
+}
+/deep/ .van-tabs__wrap {
+  width: 750px;
+  position: fixed;
+  top: 92px;
+  z-index: 1;
+  border-bottom: 1px solid #edeff3;
 }
 </style>
