@@ -5,7 +5,7 @@
         <van-list
           v-model="loading"
           :finished="finished"
-          finished-text="到底了呢~"
+          finished-text="到底了呢~更多请登录 www.4399.com"
           @load="onLoad"
         >
           <van-cell

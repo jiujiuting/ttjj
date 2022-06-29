@@ -14,3 +14,8 @@ export const getArticleList = ({ channel_id, timestamp }) => {
     }
   })
 }
+export const getAllArticleList = () => {
+  return request({
+    url: 'channels'
+  })
+}
