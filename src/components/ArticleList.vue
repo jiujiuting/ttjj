@@ -1,20 +1,29 @@
 <template>
   <div>
     <van-cell-group>
-      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+      <van-pull-refresh
+        v-model="refreshing"
+        @refresh="onRefresh"
+        ref="pullrefresh"
+      >
         <van-list
           v-model="loading"
           :finished="finished"
           finished-text="到底了呢~更多请登录 www.4399.com"
           @load="onLoad"
         >
-          <van-cell
+          <!-- <van-cell
             v-for="(item, index) in articleList"
             :key="index"
             :title="item.title"
             value="内容"
             :label="item.aut_name"
-          />
+          /> -->
+          <ArticleItem
+            v-for="(item, index) in articleList"
+            :key="index"
+            :article="item"
+          ></ArticleItem>
         </van-list>
       </van-pull-refresh>
     </van-cell-group>
@@ -22,7 +31,10 @@
 </template>
 
 <script>
+import ArticleItem from './ArticleItem.vue'
 import { getArticleList } from '@/api/home'
+let ele = null
+let scrollTop = 0
 export default {
   name: 'ArticleList',
   props: {
@@ -33,6 +45,19 @@ export default {
   },
   created () {
     this.getArticleList()
+  },
+  // 定义阅读位置
+  mounted () {
+    // 获取DOM结构
+    ele = this.$refs.pullrefresh.$el
+    // 获取页面滚动距离
+    ele.addEventListener('scroll', function () {
+      scrollTop = this.scrollTop
+    })
+  },
+  // 页面激活时设置滚动距离
+  activated () {
+    ele.scrollTop = scrollTop
   },
   data () {
     return {
@@ -81,7 +106,10 @@ export default {
   computed: {},
   watch: {},
   filters: {},
-  components: {}
+  components: {
+    ArticleItem
+
+  }
 }
 </script>
 

@@ -19,3 +19,12 @@ export const getAllArticleList = () => {
     url: 'channels'
   })
 }
+export const saveChannels = (channels) => {
+  return request({
+    url: 'user/channels',
+    method: 'PUT',
+    data: {
+      channels
+    }
+  })
+}

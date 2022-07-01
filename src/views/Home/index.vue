@@ -1,3 +1,4 @@
+/* eslint-disable no-empty */
 <template>
   <div>
     <van-nav-bar title="标题" fixed>
@@ -43,6 +44,8 @@
 import ChannelPanel from './components/ChannelPanel.vue'
 import ArticleList from '@/components/ArticleList.vue'
 import { getMyChannels } from '@/api/home'
+import { getItem } from '@/utils/storage'
+const CHANNELS = 'CHANNELS'
 export default {
   name: 'Home',
   created () {
@@ -57,16 +60,21 @@ export default {
   },
   methods: {
     async getMyChannels () {
-      try {
-        const res = await getMyChannels()
-        this.channels = res.data.data.channels
-      } catch (err) {
-        console.log(err)
+      const channels = getItem(CHANNELS)
+      if (!(this.$store.state.user && this.$store.state.user.token) && channels) {
+        this.channels = channels
+      } else {
+        try {
+          const res = await getMyChannels()
+          this.channels = res.data.data.channels
+        } catch (err) {
+          console.log(err)
+        }
       }
     }
   },
   computed: {},
-  watch: {},
+
   filters: {},
   components: {
     ArticleList,

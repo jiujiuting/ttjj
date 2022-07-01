@@ -43,7 +43,9 @@
 </template>
 
 <script>
-import { getAllArticleList } from '@/api/home'
+import { setItem } from '@/utils/storage'
+import { getAllArticleList, saveChannels } from '@/api/home'
+const CHANNELS = 'CHANNELS'
 export default {
   name: 'ChannelPanel',
   props: {
@@ -83,9 +85,8 @@ export default {
     },
     onClick (index) {
       if (this.isCloseShow) {
-        if (index === 0) {
-          return
-        }
+        // 推荐频道不能删除
+        if (index === 0) return
         // 删除
         // 利用索引将其添加到推荐频道
         this.recommendChannels.push(this.channels[index])
@@ -102,7 +103,31 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  // 监听频道的变化
+  watch: {
+    // 持久化 登录后放后台服务器  未登录 放本地存储
+    channels: {
+      async handler (newVal) {
+        if (this.$store.state.user && this.$store.state.user.token) { // 登录后
+          console.log(1)
+          const arr = []
+          newVal.forEach((item, index) => {
+            arr.push({ id: item.id, seq: index })
+          })
+          console.log(arr)
+          try {
+            const res = await saveChannels(arr)
+            console.log(res)
+          } catch (err) {
+            console.log(err)
+          }
+        } else { // 未登录
+          setItem(CHANNELS, newVal)
+        }
+      },
+      deep: true
+    }
+  },
   filters: {},
   components: {}
 }
