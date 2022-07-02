@@ -49,7 +49,7 @@ export default {
           this.finished = true
           return
         }
-        this.list = res.data.data.results
+        this.list.push(...res.data.data.results)
         this.loading = false
         this.isLoading = false
       } catch (err) {
