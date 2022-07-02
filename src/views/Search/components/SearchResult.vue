@@ -1,10 +1,19 @@
 <template>
-  <div>
-    <ArticleItem
-      v-for="(item, index) in list"
-      :key="index"
-      :article="item"
-    ></ArticleItem>
+  <div class="container">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+        <ArticleItem
+          v-for="(item, index) in list"
+          :key="index"
+          :article="item"
+        ></ArticleItem>
+      </van-list>
+    </van-pull-refresh>
   </div>
 </template>
 
@@ -25,7 +34,10 @@ export default {
     return {
       page: 1,
       per_page: 20,
-      list: []
+      list: [],
+      loading: false,
+      finished: false,
+      isLoading: false
     }
   },
   methods: {
@@ -33,10 +45,25 @@ export default {
       try {
         const res = await getSearchResult({ page: this.page, per_page: this.per_page, q: this.searchText })
         console.log(res)
+        if (res.data.data.results.length === 0) {
+          this.finished = true
+          return
+        }
         this.list = res.data.data.results
+        this.loading = false
+        this.isLoading = false
       } catch (err) {
         console.log(err)
       }
+    },
+    onLoad () {
+      this.page++
+      this.getSearchResult()
+    },
+    onRefresh () {
+      this.list = []
+      this.page = 1
+      this.getSearchResult()
     }
   },
   computed: {},
@@ -49,4 +76,8 @@ export default {
 </script>
 
 <style scoped lang='less'>
+.container {
+  overflow: auto;
+  height: calc(100vh - 108px);
+}
 </style>
