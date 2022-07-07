@@ -30,3 +30,10 @@ export const delList = (target) => {
     url: `/comment/likings/${target}`
   })
 }
+export const addComment = (data) => {
+  return request({
+    method: 'POST',
+    url: '/comments',
+    data
+  })
+}

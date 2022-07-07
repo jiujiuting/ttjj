@@ -4,7 +4,7 @@
     <van-nav-bar
       class="page-nav-bar"
       left-arrow
-      @click-left="$router.go(-1)"
+      @click-left="$router.back()"
       title="黑马头条"
     ></van-nav-bar>
     <!-- /导航栏 -->
@@ -63,6 +63,11 @@
             :source="article.art_id"
             type="a"
             @set-count="count = $event"
+            :commentList="commentList"
+            @replay-sohw="
+              comment = $event;
+              isReplayShow = true;
+            "
           ></ArticleComment>
         </div>
         <!-- /加载完成-文章详情 -->
@@ -86,7 +91,12 @@
 
     <!-- 底部区域 -->
     <div class="article-bottom" v-if="!isLoading && !!article.art_id">
-      <van-button class="comment-btn" type="default" round size="small"
+      <van-button
+        class="comment-btn"
+        type="default"
+        round
+        size="small"
+        @click="addCommmentShow = true"
         >写评论</van-button
       >
       <van-icon name="comment-o" :badge="count" color="#777" />
@@ -107,6 +117,26 @@
       title="立即分享给好友"
       :options="options"
     />
+    <!-- 发布评论 -->
+    <van-popup v-model="addCommmentShow" position="bottom">
+      <AddComment
+        v-if="addCommmentShow"
+        :target="article_id"
+        @add-comment="
+          commentList.unshift($event);
+          addCommmentShow = false;
+        "
+      ></AddComment>
+    </van-popup>
+    <!-- 回复评论弹出层 -->
+    <van-popup v-model="isReplayShow" position="bottom" style="height: 100%">
+      <!-- 弹出层默认是v-show显示隐藏数据不更新用v-if解决 -->
+      <ReplayComment
+        :comment="comment"
+        @close="isReplayShow = false"
+        v-if="isReplayShow"
+      ></ReplayComment>
+    </van-popup>
   </div>
 </template>
 
@@ -119,10 +149,14 @@ import 'github-markdown-css'
 import { ImagePreview } from 'vant'
 import CollectArticle from '@/components/CollectArticle.vue'
 import ArticleComment from './components/ArticleComment.vue'
+// 发布评论
+import AddComment from './components/AddComment.vue'
+// 回复评论
+import ReplayComment from './components/ReplayComment.vue'
 
 export default {
   name: 'ArticleIndex',
-  components: { CollectArticle, ArticleComment },
+  components: { CollectArticle, ArticleComment, AddComment, ReplayComment },
   props: {
     article_id: {
       type: [Number, String],
@@ -131,6 +165,7 @@ export default {
   },
   data () {
     return {
+      commentList: [],
       isLoading: true,
       article: {},
       is404Error: false,
@@ -150,7 +185,10 @@ export default {
           { name: '小程序码', icon: 'weapp-qrcode' }
         ]
       ],
-      count: null
+      count: null,
+      addCommmentShow: false,
+      isReplayShow: false,
+      comment: {}
     }
   },
   computed: {},

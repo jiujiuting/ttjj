@@ -10,6 +10,7 @@
         v-for="(item, index) in commentList"
         :key="index"
         :item="item"
+        @replay-sohw="$emit('replay-sohw', $event)"
       ></CommentItem>
     </van-list>
   </div>
@@ -30,6 +31,10 @@ export default {
     source: {
       type: [Number, String],
       required: true
+    },
+    commentList: {
+      type: Array,
+      required: true
     }
   },
   created () {
@@ -43,7 +48,7 @@ export default {
         limit: 5,
         offset: null
       },
-      commentList: [],
+      // commentList: [],
       loading: false,
       finished: false
     }
